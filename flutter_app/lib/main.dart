@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pos/Screens/loginScreen.dart';
+
+final storage = FlutterSecureStorage();
 
 void main() {
   runApp(BillyPOS());
@@ -22,7 +26,7 @@ class BillyPOS extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Billy POS'),
+      home: LoginScreen(),
     );
   }
 }
