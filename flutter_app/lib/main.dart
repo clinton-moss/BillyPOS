@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pos/Providers/LoginProvider.dart';
 import 'package:pos/Screens/loginScreen.dart';
+import 'package:provider/provider.dart';
 
 final storage = FlutterSecureStorage();
 
 void main() {
-  runApp(BillyPOS());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => LoginProvider()),
+    // Provider(create: (context) => SomeOtherClass()),
+  ], child: BillyPOS()));
 }
 
 class BillyPOS extends StatelessWidget {
@@ -32,7 +37,7 @@ class BillyPOS extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title = ""}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect

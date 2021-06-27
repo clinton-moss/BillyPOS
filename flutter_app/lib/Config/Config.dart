@@ -1,11 +1,8 @@
 class Configuration {
-  static String billyCoreAPI = "http://192.168.0.113:8080";
+  static String billyCoreAPI = "http://192.168.0.113:8050";
+  static String billySessionToken = "";
 
-  Future<void> loadConfig() {
-    return null;
-  }
+  void loadConfig() {}
 
-  Future<void> updateConfig() {
-    return null;
-  }
+  void updateConfig() {}
 }

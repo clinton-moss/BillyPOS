@@ -1,73 +1,89 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:pos/Config/Config.dart';
 
-import 'package:http/http.dart' as http;
-import 'package:pos/main.dart';
+import 'package:pos/Helpers/Loader.dart';
+import 'package:pos/Models/Auth/Loginresponse.dart';
+import 'package:pos/Providers/LoginProvider.dart';
+import 'package:provider/provider.dart';
 
 import 'HomeScreen.dart';
 
 class LoginScreen extends StatelessWidget {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Log In")),
-      body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
-            ),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(labelText: 'Password'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                var username = _usernameController.text;
-                var password = _passwordController.text;
-
-                var jwt = await attemptLogIn(username, password);
-                if (jwt != null) {
-                  storage.write(key: "jwt", value: jwt);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomeScreen.fromBase64(jwt)));
-                } else {
-                  displayDialog(context, "An Error Occurred",
-                      "No account was found matching that username and password");
-                }
+      body: ListView(
+        children: [
+          // Email Field
+          Consumer<LoginProvider>(builder: (context, provider, child) {
+            return TextField(
+              decoration: InputDecoration(
+                labelText: "Username",
+                errorText: provider.email.error,
+              ),
+              onChanged: (String value) {
+                provider.changeEmail(value);
               },
-              child: Text("Log In"),
-            ),
-          ],
-        ),
+            );
+          }),
+
+          // Password Field
+          Consumer<LoginProvider>(builder: (context, provider, child) {
+            return TextField(
+              decoration: InputDecoration(
+                labelText: "Password",
+                errorText: provider.password.error,
+              ),
+              onChanged: (String value) {
+                provider.changePassword(value);
+              },
+            );
+          }),
+
+          //Update Indicator
+          Consumer<LoginProvider>(builder: (context, provider, child) {
+            return Container(
+              height: 150,
+              child: Center(
+                child: provider.state == ViewState.Idle
+                    ? Container()
+                    : CircularProgressIndicator(),
+              ),
+            );
+          }),
+
+          //Submit button will be enabled on correct format of email and password
+          Consumer<LoginProvider>(builder: (context, provider, child) {
+            return ElevatedButton(
+              // color: Colors.blue,
+              // disabledColor: Colors.grey,
+              child: Text(
+                'Submit',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: (!provider.isValid)
+                  ? null
+                  : () {
+                      provider.submitLogin().then((LoginResponse response) {
+                        print('response: ${response.token} ');
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen()));
+                      }).onError((error, stackTrace) {
+                        //
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  content: Text(
+                                      (error == null) ? "" : error.toString()),
+                                ));
+                      });
+                    },
+            );
+          })
+        ],
       ),
     );
-  }
-
-  void displayDialog(BuildContext context, String title, String text) =>
-      showDialog(
-        context: context,
-        builder: (context) =>
-            AlertDialog(title: Text(title), content: Text(text)),
-      );
-
-  Future<String> attemptLogIn(String username, String password) async {
-    var res = await http.post(
-        Uri.parse(Configuration.billyCoreAPI + "/authenticate"),
-        body: json
-            .encode({"username": username, "password": password}).toString(),
-        headers: {"content-type": "application/json"});
-    if (res.statusCode == 200) return res.body;
-    return null;
   }
 }
