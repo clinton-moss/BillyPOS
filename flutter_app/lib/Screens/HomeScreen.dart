@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pos/Screens/StandbyScreen.dart';
+import 'package:pos/Widgets/input/NumberKeyboard.dart';
 
 class HomeScreen extends StatelessWidget {
   // HomeScreen(this.jwt, this.payload);
@@ -13,22 +15,17 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text("Billy - POS")),
-        body: Center(
-            // child: FutureBuilder(
-            //     future:
-            //         http.read('$SERVER_IP/data', headers: {"Authorization": jwt}),
-            //     builder: (context, snapshot) => snapshot.hasData
-            //         ? Column(
-            //             children: <Widget>[
-            //               Text("${payload['username']}, here's the data:"),
-            //               Text(snapshot.data,
-            //                   style: Theme.of(context).textTheme.display1)
-            //             ],
-            //           )
-            //         : snapshot.hasError
-            //             ? Text("An error occurred")
-            //             : CircularProgressIndicator()),
-            ),
-      );
+      appBar: AppBar(title: Text("Billy - POS")),
+      body: Column(
+        children: [
+          Text('Please enter your employee code'),
+          Text('*  *  *  *'),
+          NumberKeyboard(
+            onComplete: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (builder) => StandbyScreen()));
+            },
+          ),
+        ],
+      ));
 }

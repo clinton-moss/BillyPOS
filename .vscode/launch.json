@@ -5,7 +5,7 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "flutter_app",
+			"name": "billy_posbilly_pos",
 			"cwd": "flutter_app",
 			"request": "launch",
 			"type": "dart"

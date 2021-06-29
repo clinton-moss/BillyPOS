@@ -1,0 +1,4 @@
+Enable Network Deploymnet
+/home/clinton/adb/platform-tools/adb tcpip 5555
+/home/clinton/adb/platform-tools/adb connect 10.0.0.24:5555
+/home/clinton/adb/platform-tools/adb connect 192.168.0.100:5555

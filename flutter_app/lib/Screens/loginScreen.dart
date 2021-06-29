@@ -18,7 +18,7 @@ class LoginScreen extends StatelessWidget {
             return TextField(
               decoration: InputDecoration(
                 labelText: "Username",
-                errorText: provider.email.error,
+                // errorText: provider.email.error,
               ),
               onChanged: (String value) {
                 provider.changeEmail(value);
@@ -31,7 +31,7 @@ class LoginScreen extends StatelessWidget {
             return TextField(
               decoration: InputDecoration(
                 labelText: "Password",
-                errorText: provider.password.error,
+                // errorText: provider.password.error,
               ),
               onChanged: (String value) {
                 provider.changePassword(value);
